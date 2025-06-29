@@ -2,6 +2,10 @@
 
 A simple script to set up the `yolo` alias for running Claude with background tasks enabled and permissions skipped.
 
+## ⚠️ Security Notice
+
+This alias uses `--dangerously-skip-permissions` which bypasses Claude's permission prompts. Only use this if you understand and accept the security implications. Claude will execute commands without asking for confirmation.
+
 ## What it does
 
 This script adds an alias to your shell configuration:
@@ -13,14 +17,14 @@ yolo → ENABLE_BACKGROUND_TASKS=1 claude --dangerously-skip-permissions
 
 ### Option 1: Clone and run
 ```bash
-git clone https://github.com/YOUR_USERNAME/yolo-alias-setup.git
+git clone https://github.com/adamanz/yolo-alias-setup.git
 cd yolo-alias-setup
 ./setup-yolo.sh
 ```
 
 ### Option 2: One-liner
 ```bash
-curl -sSL https://raw.githubusercontent.com/YOUR_USERNAME/yolo-alias-setup/main/setup-yolo.sh | bash
+curl -sSL https://raw.githubusercontent.com/adamanz/yolo-alias-setup/master/setup-yolo.sh | bash
 ```
 
 ## Supported Shells

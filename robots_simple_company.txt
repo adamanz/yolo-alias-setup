@@ -1,0 +1,16 @@
+# Robots.txt for simple.company
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://simple.company/sitemap.xml
+Sitemap: https://www.simple.company/sitemap.xml
+
+# Crawl delay for politeness
+Crawl-delay: 1
+
+# Block admin/private areas if they exist
+Disallow: /admin/
+Disallow: /private/
+Disallow: /.git/
+Disallow: /api/private/

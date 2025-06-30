@@ -1,0 +1,97 @@
+#!/bin/bash
+# Simple Google Indexing API wrapper
+
+# Check if URL is provided
+if [ -z "$2" ]; then
+    echo "Google Indexing API Tool"
+    echo "========================"
+    echo ""
+    echo "Usage:"
+    echo "  ./gindex-simple submit <url>"
+    echo "  ./gindex-simple delete <url>" 
+    echo "  ./gindex-simple status <url>"
+    echo ""
+    echo "Prerequisites:"
+    echo "  1. Your site must be verified in Google Search Console"
+    echo "  2. Run: gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/indexing"
+    exit 1
+fi
+
+COMMAND=$1
+URL=$2
+PROJECT_ID=$(gcloud config get-value project 2>/dev/null)
+
+# Get token from ADC
+get_token() {
+    local adc_file="$HOME/.config/gcloud/application_default_credentials.json"
+    if [ ! -f "$adc_file" ]; then
+        echo "Error: No Application Default Credentials found."
+        echo "Run: gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/indexing"
+        exit 1
+    fi
+    
+    # Extract credentials
+    CLIENT_ID=$(jq -r '.client_id' "$adc_file")
+    CLIENT_SECRET=$(jq -r '.client_secret' "$adc_file")
+    REFRESH_TOKEN=$(jq -r '.refresh_token' "$adc_file")
+    
+    # Get access token
+    TOKEN_RESPONSE=$(curl -s -X POST https://oauth2.googleapis.com/token \
+        -d "client_id=$CLIENT_ID" \
+        -d "client_secret=$CLIENT_SECRET" \
+        -d "refresh_token=$REFRESH_TOKEN" \
+        -d "grant_type=refresh_token")
+    
+    ACCESS_TOKEN=$(echo "$TOKEN_RESPONSE" | jq -r '.access_token')
+    
+    if [ "$ACCESS_TOKEN" == "null" ] || [ -z "$ACCESS_TOKEN" ]; then
+        echo "Error getting access token. You may need to re-authenticate:"
+        echo "gcloud auth application-default login --scopes=https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/indexing"
+        echo ""
+        echo "Token response: $TOKEN_RESPONSE"
+        exit 1
+    fi
+    
+    echo "$ACCESS_TOKEN"
+}
+
+# Get access token
+echo "Getting access token..."
+ACCESS_TOKEN=$(get_token)
+
+case $COMMAND in
+    submit)
+        echo "Submitting URL for indexing: $URL"
+        curl -s -X POST \
+            "https://indexing.googleapis.com/v3/urlNotifications:publish" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "x-goog-user-project: $PROJECT_ID" \
+            -d "{\"url\": \"$URL\", \"type\": \"URL_UPDATED\"}" | jq .
+        ;;
+        
+    delete)
+        echo "Requesting URL deletion: $URL"
+        curl -s -X POST \
+            "https://indexing.googleapis.com/v3/urlNotifications:publish" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -H "x-goog-user-project: $PROJECT_ID" \
+            -d "{\"url\": \"$URL\", \"type\": \"URL_DELETED\"}" | jq .
+        ;;
+        
+    status)
+        echo "Checking indexing status for: $URL"
+        ENCODED_URL=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$URL'))")
+        curl -s -X GET \
+            "https://indexing.googleapis.com/v3/urlNotifications/metadata?url=$ENCODED_URL" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "x-goog-user-project: $PROJECT_ID" | jq .
+        ;;
+        
+    *)
+        echo "Unknown command: $COMMAND"
+        echo "Valid commands: submit, delete, status"
+        exit 1
+        ;;
+esac

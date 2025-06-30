@@ -1,0 +1,16 @@
+{
+  "name": "seo-deployment-suite",
+  "version": "1.0.0",
+  "description": "SEO fixes for all sites",
+  "scripts": {
+    "test": "node ../seo-test-suite.js",
+    "deploy:all": "npm run deploy:mysimplestack && npm run deploy:textmaya && npm run deploy:goodseeds",
+    "deploy:mysimplestack": "gcloud run deploy mysimplestack-seo --source . --region us-central1",
+    "deploy:textmaya": "gcloud run deploy textmaya-seo --source . --region us-central1",
+    "deploy:goodseeds": "gcloud run deploy goodseeds-seo --source . --region us-central1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^21.0.0"
+  }
+}

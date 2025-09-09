@@ -22,7 +22,7 @@ add_alias_to_file() {
     fi
     
     # Add the new alias with proper escaping
-    echo "alias $ALIAS_NAME='ENABLE_BACKGROUND_TASKS=1 claude --dangerously-skip-permissions --mcp-config \"{ \\\"mcpServers\\\": { \\\"messages\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"run\\\", \\\"mac-messages-mcp\\\"] }, \\\"playwright\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"@executeautomation/playwright-mcp-server\\\"] }, \\\"box\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"--directory\\\", \\\"/Users/adamanzuoni/mcp-server-box\\\", \\\"run\\\", \\\"src/mcp_server_box.py\\\"] }, \\\"replicate\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"replicate-mcp\\\"] } } }\"'" >> "$file"
+    echo "alias $ALIAS_NAME='ENABLE_BACKGROUND_TASKS=1 claude --dangerously-skip-permissions --mcp-config \"{ \\\"mcpServers\\\": { \\\"messages\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"run\\\", \\\"mac-messages-mcp\\\"] }, \\\"playwright\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"@executeautomation/playwright-mcp-server\\\"] }, \\\"box\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"--directory\\\", \\\"/Users/adamanzuoni/mcp-server-box\\\", \\\"run\\\", \\\"src/mcp_server_box.py\\\"] }, \\\"replicate\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"replicate-mcp\\\"] }, \\\"beeper\\\": { \\\"type\\\": \\\"http\\\", \\\"url\\\": \\\"http://localhost:23373/v0/mcp\\\" } } }\"'" >> "$file"
     echo "✓ Added/Updated '$ALIAS_NAME' alias in $file"
 }
 
@@ -42,7 +42,7 @@ add_fish_function() {
     fi
     
     # Add the new alias for fish
-    echo "alias $ALIAS_NAME 'ENABLE_BACKGROUND_TASKS=1 claude --dangerously-skip-permissions --mcp-config \"{ \\\"mcpServers\\\": { \\\"messages\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"run\\\", \\\"mac-messages-mcp\\\"] }, \\\"playwright\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"@executeautomation/playwright-mcp-server\\\"] }, \\\"box\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"--directory\\\", \\\"/Users/adamanzuoni/mcp-server-box\\\", \\\"run\\\", \\\"src/mcp_server_box.py\\\"] }, \\\"replicate\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"replicate-mcp\\\"] } } }\"'" >> "$fish_config"
+    echo "alias $ALIAS_NAME 'ENABLE_BACKGROUND_TASKS=1 claude --dangerously-skip-permissions --mcp-config \"{ \\\"mcpServers\\\": { \\\"messages\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"run\\\", \\\"mac-messages-mcp\\\"] }, \\\"playwright\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"@executeautomation/playwright-mcp-server\\\"] }, \\\"box\\\": { \\\"command\\\": \\\"uv\\\", \\\"args\\\": [\\\"--directory\\\", \\\"/Users/adamanzuoni/mcp-server-box\\\", \\\"run\\\", \\\"src/mcp_server_box.py\\\"] }, \\\"replicate\\\": { \\\"command\\\": \\\"npx\\\", \\\"args\\\": [\\\"-y\\\", \\\"replicate-mcp\\\"] }, \\\"beeper\\\": { \\\"type\\\": \\\"http\\\", \\\"url\\\": \\\"http://localhost:23373/v0/mcp\\\" } } }\"'" >> "$fish_config"
     echo "✓ Added/Updated '$ALIAS_NAME' alias in $fish_config"
 }
 
@@ -52,9 +52,9 @@ echo ""
 echo "This alias includes:"
 echo "  - Background tasks enabled"
 echo "  - Dangerous permissions skipped"
-echo "  - MCP servers: messages, playwright, box, replicate"
+echo "  - MCP servers: messages, playwright, box, replicate, beeper"
 echo ""
-echo "Note: HTTP MCP servers (like deepwiki, context7) should be added separately via:"
+echo "Note: Additional HTTP MCP servers (like deepwiki, context7) can be added separately via:"
 echo "  claude mcp add -s user -t http deepwiki https://mcp.deepwiki.com/mcp"
 echo "  claude mcp add -s user -t http context7 https://mcp.context7.com/mcp"
 echo ""
